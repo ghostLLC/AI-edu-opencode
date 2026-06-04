@@ -51,6 +51,7 @@
   "plans": {
     "title": "我的学习方案",
     "new_cta": "新建方案",
+    "list_empty": "还没有学习方案, 点击\"新建方案\"创建第一个。",
     "skeleton_placeholder": "AI 编排器接入后 (Week 2) 会在此显示方案列表。",
     "detail": {
       "stage_learn": "学习",
@@ -62,7 +63,18 @@
       "start_learning": "开始学习",
       "complete_to_unlock": "完成后可用",
       "node_list": "节点列表",
-      "nodes_count": "{count} 个节点"
+      "nodes_count": "{count} 个节点",
+      "status": "状态",
+      "status_label": "方案状态",
+      "status_draft": "草稿",
+      "status_confirmed": "已确认",
+      "status_in_learn": "学习中",
+      "status_in_practice": "练习中",
+      "status_in_assess": "评估中",
+      "status_completed": "已完成",
+      "status_archived": "已归档",
+      "open": "打开",
+      "locked": "未解锁"
     }
   },
   "intake": {
@@ -72,7 +84,52 @@
     "goal_placeholder": "例如: 精通 React, 西语学到 B2, 通过 AWS 解决方案架构师考试...",
     "context_label": "背景 (可选)",
     "context_placeholder": "你目前的基础? 有什么限制条件?",
-    "submit": "生成学习方案"
+    "submit": "生成学习方案",
+    "submitting": "正在生成方案...",
+    "budget_exceeded": "已超出今日 AI 调用预算, 请明天再试。"
+  },
+  "learn": {
+    "title": "学习",
+    "empty_hint": "关于\"{title}\"有任何问题尽管问 — 我会讲解、举例、并检验理解。",
+    "input_placeholder": "输入你的问题或想法...",
+    "submit": "发送",
+    "submitting": "思考中...",
+    "mark_complete": "标记为已学",
+    "mark_complete_confirm": "确认标记此节点为已学? 之后可以随时回来。",
+    "back_to_plan": "返回方案"
+  },
+  "practice": {
+    "title": "练习",
+    "empty_hint": "准备好把\"{title}\"应用起来了吗? 跟我说一声, 我出练习题。",
+    "input_placeholder": "要练习题, 或粘贴你的尝试求反馈...",
+    "submit": "发送",
+    "submitting": "思考中...",
+    "mark_complete": "标记为已练",
+    "mark_complete_confirm": "确认标记此节点为已练?",
+    "back_to_plan": "返回方案"
+  },
+  "assess": {
+    "title": "评估",
+    "submission_label": "你的提交",
+    "submission_placeholder": "粘贴或写下你的作品...",
+    "submit": "提交评分",
+    "submitting": "评分中...",
+    "error_empty": "请先输入提交内容再评分。",
+    "error_budget": "已超出今日 AI 调用预算, 请明天再试。",
+    "back_to_plan": "返回方案",
+    "resubmit": "重新提交"
+  },
+  "node_stage": {
+    "learn": "学习",
+    "practice": "练习",
+    "assess": "评估"
+  },
+  "node_status": {
+    "pending": "未开始",
+    "in_progress": "进行中",
+    "learned": "已学",
+    "practiced": "已练",
+    "mastered": "已掌握"
   },
   "nav": {
     "dashboard": "仪表盘",
@@ -90,6 +147,9 @@
   },
   "errors": {
     "email_taken": "该邮箱已注册。",
-    "signup_failed": "注册失败, 请重试。"
+    "signup_failed": "注册失败, 请重试。",
+    "unauthorized": "请登录后继续。",
+    "no_plan_id": "服务器未返回方案 ID, 请重试。",
+    "generate_failed": "方案生成失败 (状态码 {status})。"
   }
 }

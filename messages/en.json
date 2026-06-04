@@ -51,6 +51,7 @@
   "plans": {
     "title": "My Learning Plans",
     "new_cta": "New plan",
+    "list_empty": "No learning plans yet. Click \"New plan\" to create your first one.",
     "skeleton_placeholder": "Plans will appear here once the AI orchestrator is wired in Week 2.",
     "detail": {
       "stage_learn": "Learn",
@@ -62,7 +63,18 @@
       "start_learning": "Start learning",
       "complete_to_unlock": "Complete previous stage to unlock",
       "node_list": "Node list",
-      "nodes_count": "{count} nodes"
+      "nodes_count": "{count} nodes",
+      "status": "Status",
+      "status_label": "Plan status",
+      "status_draft": "Draft",
+      "status_confirmed": "Confirmed",
+      "status_in_learn": "In learning",
+      "status_in_practice": "In practice",
+      "status_in_assess": "In assessment",
+      "status_completed": "Completed",
+      "status_archived": "Archived",
+      "open": "Open",
+      "locked": "Locked"
     }
   },
   "intake": {
@@ -72,7 +84,52 @@
     "goal_placeholder": "e.g. Master React, learn Spanish to B2, pass the AWS Solutions Architect exam...",
     "context_label": "Background (optional)",
     "context_placeholder": "Prior knowledge, deadlines, constraints, preferences...",
-    "submit": "Generate learning plan"
+    "submit": "Generate learning plan",
+    "submitting": "Generating your plan...",
+    "budget_exceeded": "Daily AI budget exceeded. Please try again tomorrow."
+  },
+  "learn": {
+    "title": "Learn",
+    "empty_hint": "Ask me anything about \"{title}\" — I'll explain, give examples, and check understanding.",
+    "input_placeholder": "Type your question or idea...",
+    "submit": "Send",
+    "submitting": "Thinking...",
+    "mark_complete": "Mark as learned",
+    "mark_complete_confirm": "Mark this node as learned? You can revisit any time.",
+    "back_to_plan": "Back to plan"
+  },
+  "practice": {
+    "title": "Practice",
+    "empty_hint": "Ready to apply what you learned about \"{title}\"? Tell me when you'd like a practice task.",
+    "input_placeholder": "Ask for a task, or paste your attempt for feedback...",
+    "submit": "Send",
+    "submitting": "Thinking...",
+    "mark_complete": "Mark as practiced",
+    "mark_complete_confirm": "Mark this node as practiced?",
+    "back_to_plan": "Back to plan"
+  },
+  "assess": {
+    "title": "Assess",
+    "submission_label": "Your submission",
+    "submission_placeholder": "Paste or write your work here...",
+    "submit": "Submit for grading",
+    "submitting": "Grading...",
+    "error_empty": "Please enter a submission before grading.",
+    "error_budget": "Daily AI budget exceeded. Please try again tomorrow.",
+    "back_to_plan": "Back to plan",
+    "resubmit": "Resubmit"
+  },
+  "node_stage": {
+    "learn": "Learn",
+    "practice": "Practice",
+    "assess": "Assess"
+  },
+  "node_status": {
+    "pending": "Not started",
+    "in_progress": "In progress",
+    "learned": "Learned",
+    "practiced": "Practiced",
+    "mastered": "Mastered"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -90,6 +147,9 @@
   },
   "errors": {
     "email_taken": "This email is already registered.",
-    "signup_failed": "Sign-up failed. Please try again."
+    "signup_failed": "Sign-up failed. Please try again.",
+    "unauthorized": "Please sign in to continue.",
+    "no_plan_id": "Server didn't return a plan ID. Please try again.",
+    "generate_failed": "Plan generation failed (status {status})."
   }
 }
