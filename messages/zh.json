@@ -1,0 +1,78 @@
+{
+  "app": {
+    "brand": "AI-Edu-OpenCode",
+    "welcome": "欢迎回来, {name}"
+  },
+  "home": {
+    "title": "AI 辅导, 学你想学的",
+    "subtitle": "3 阶段个性化学习路径, 智能练习, 实时反馈 —— 全部由 AI 驱动。",
+    "cta_primary": "开始学习",
+    "cta_secondary": "登录",
+    "feature_1_title": "个性化",
+    "feature_1_desc": "告诉我们你的目标, 获得量身定制的学习路径。",
+    "feature_2_title": "自适应",
+    "feature_2_desc": "难度根据你的掌握度实时调整。",
+    "feature_3_title": "社区",
+    "feature_3_desc": "与同伴学习, 在知识库中分享。"
+  },
+  "nav": {
+    "dashboard": "仪表盘",
+    "plans": "我的方案",
+    "intake": "新建方案",
+    "assessments": "能力评估",
+    "community": "社区"
+  },
+  "userMenu": {
+    "profile": "个人资料",
+    "signOut": "退出登录"
+  },
+  "languageSwitcher": {
+    "label": "语言",
+    "en": "EN",
+    "zh": "中"
+  },
+  "auth": {
+    "signin": {
+      "title": "欢迎回来",
+      "subtitle": "登录以继续学习之旅",
+      "email": "邮箱",
+      "password": "密码",
+      "submit": "登录",
+      "no_account": "还没有账号?",
+      "sign_up_link": "注册"
+    },
+    "signup": {
+      "title": "创建账号",
+      "subtitle": "开启你的个性化学习之旅",
+      "name": "姓名",
+      "email": "邮箱",
+      "password": "密码",
+      "submit": "创建账号",
+      "have_account": "已有账号?",
+      "sign_in_link": "登录"
+    }
+  },
+  "dashboard": {
+    "title": "仪表盘",
+    "new_plan_cta": "新建方案",
+    "stats_total_plans": "方案总数",
+    "stats_completed": "已完成",
+    "stats_ai_calls": "AI 调用",
+    "recent_plans": "最近方案",
+    "no_plans_yet": "还没有学习方案, 创建第一个开始吧。"
+  },
+  "plans": {
+    "title": "我的学习方案",
+    "new_cta": "新建方案",
+    "skeleton_placeholder": "AI 编排器接入后 (Week 2) 会在此显示方案列表。"
+  },
+  "intake": {
+    "title": "你想学什么?",
+    "subtitle": "用你自己的话描述目标, AI 会把它转成结构化的学习方案。",
+    "goal_label": "你的学习目标",
+    "goal_placeholder": "例如: 精通 React, 西语学到 B2, 通过 AWS 解决方案架构师考试...",
+    "context_label": "背景 (可选)",
+    "context_placeholder": "你目前的基础? 有什么限制条件?",
+    "submit": "生成学习方案"
+  }
+}

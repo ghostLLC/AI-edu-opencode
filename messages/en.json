@@ -1,0 +1,76 @@
+{
+  "app": {
+    "brand": "AI-Edu-OpenCode",
+    "welcome": "Welcome, {name}"
+  },
+  "home": {
+    "title": "Learn anything with AI tutoring",
+    "subtitle": "Get a personalized 3-stage learning path, adaptive practice, and real-time feedback — all powered by AI.",
+    "cta_primary": "Get started",
+    "cta_secondary": "Sign in",
+    "feature_1_title": "Personalized",
+    "feature_1_desc": "Tell us your goal. We generate a learning path tuned to your current level.",
+    "feature_2_title": "Adaptive",
+    "feature_2_desc": "Difficulty adjusts to your mastery in real time. No busywork, no frustration.",
+    "feature_3_title": "Community",
+    "feature_3_desc": "Learn from peers, share knowledge in the community knowledge base."
+  },
+  "auth": {
+    "signin": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue your learning journey.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "no_account": "Don't have an account?",
+      "sign_up_link": "Sign up"
+    },
+    "signup": {
+      "title": "Create your account",
+      "subtitle": "Start your personalized learning journey in seconds.",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create account",
+      "have_account": "Already have an account?",
+      "sign_in_link": "Sign in"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "new_plan_cta": "New plan",
+    "stats_total_plans": "Total plans",
+    "stats_completed": "Completed",
+    "stats_ai_calls": "AI calls",
+    "recent_plans": "Recent plans",
+    "no_plans_yet": "You don't have any learning plans yet. Create your first one to get started."
+  },
+  "plans": {
+    "title": "My Learning Plans",
+    "new_cta": "New plan",
+    "skeleton_placeholder": "Your plans will appear here. Create your first one to get started."
+  },
+  "intake": {
+    "title": "What do you want to learn?",
+    "subtitle": "Describe your goal and we'll generate a personalized 3-stage learning path.",
+    "goal_label": "Your learning goal",
+    "goal_placeholder": "e.g. Master React, learn Spanish to B2, pass the AWS Solutions Architect exam...",
+    "context_label": "Background (optional)",
+    "context_placeholder": "Prior knowledge, deadlines, constraints, preferences...",
+    "submit": "Generate learning plan"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "plans": "Plans",
+    "intake": "New Plan",
+    "assessments": "Assessments",
+    "community": "Community"
+  },
+  "userMenu": {
+    "profile": "Profile",
+    "signOut": "Sign out"
+  },
+  "languageSwitcher": {
+    "label": "Language"
+  }
+}
