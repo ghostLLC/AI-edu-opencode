@@ -1,7 +1,9 @@
 # Deployment Guide
 
 > Step-by-step guide to take AI-Edu-OpenCode from local dev to production.
-> Estimated total time: **45–90 minutes** (mostly waiting for verifications).
+> Estimated total time: **20–30 minutes** (mostly waiting for sign-ups).
+>
+> **Fast path**: For a fully automated deploy driven by us, see [`scripts/DEPLOY-CHECKLIST.md`](../scripts/DEPLOY-CHECKLIST.md) — that's the minimum 5 sign-ups + 1 OAuth click, then `pnpm deploy` does the rest.
 
 ---
 
