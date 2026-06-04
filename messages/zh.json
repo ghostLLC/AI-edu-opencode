@@ -15,39 +15,26 @@
     "feature_3_title": "社区",
     "feature_3_desc": "与同伴学习, 在知识库中分享。"
   },
-  "nav": {
-    "dashboard": "仪表盘",
-    "plans": "我的方案",
-    "intake": "新建方案",
-    "assessments": "能力评估",
-    "community": "社区"
-  },
-  "userMenu": {
-    "profile": "个人资料",
-    "signOut": "退出登录"
-  },
-  "languageSwitcher": {
-    "label": "语言",
-    "en": "EN",
-    "zh": "中"
-  },
   "auth": {
     "signin": {
       "title": "欢迎回来",
-      "subtitle": "登录以继续学习之旅",
+      "subtitle": "登录以继续学习之旅。",
       "email": "邮箱",
       "password": "密码",
       "submit": "登录",
+      "submitting": "登录中...",
       "no_account": "还没有账号?",
-      "sign_up_link": "注册"
+      "sign_up_link": "注册",
+      "error": "邮箱或密码错误"
     },
     "signup": {
       "title": "创建账号",
-      "subtitle": "开启你的个性化学习之旅",
+      "subtitle": "开启你的个性化学习之旅。",
       "name": "姓名",
       "email": "邮箱",
       "password": "密码",
       "submit": "创建账号",
+      "submitting": "创建中...",
       "have_account": "已有账号?",
       "sign_in_link": "登录"
     }
@@ -64,7 +51,19 @@
   "plans": {
     "title": "我的学习方案",
     "new_cta": "新建方案",
-    "skeleton_placeholder": "AI 编排器接入后 (Week 2) 会在此显示方案列表。"
+    "skeleton_placeholder": "AI 编排器接入后 (Week 2) 会在此显示方案列表。",
+    "detail": {
+      "stage_learn": "学习",
+      "stage_practice": "练习",
+      "stage_assess": "评估",
+      "learn_desc": "苏格拉底式",
+      "practice_desc": "巩固已学",
+      "assess_desc": "真实任务",
+      "start_learning": "开始学习",
+      "complete_to_unlock": "完成后可用",
+      "node_list": "节点列表",
+      "nodes_count": "{count} 个节点"
+    }
   },
   "intake": {
     "title": "你想学什么?",
@@ -74,5 +73,23 @@
     "context_label": "背景 (可选)",
     "context_placeholder": "你目前的基础? 有什么限制条件?",
     "submit": "生成学习方案"
+  },
+  "nav": {
+    "dashboard": "仪表盘",
+    "plans": "我的方案",
+    "intake": "新建方案",
+    "assessments": "能力评估",
+    "community": "社区"
+  },
+  "userMenu": {
+    "profile": "个人资料",
+    "signOut": "退出登录"
+  },
+  "languageSwitcher": {
+    "label": "语言"
+  },
+  "errors": {
+    "email_taken": "该邮箱已注册。",
+    "signup_failed": "注册失败, 请重试。"
   }
 }

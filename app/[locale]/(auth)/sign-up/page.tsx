@@ -1,17 +1,50 @@
+'use client';
+
 import Link from 'next/link';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { useRouter, useParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-export default async function SignUpPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-  setRequestLocale(locale);
-  const t = await getTranslations('auth.signup');
+export default function SignUpPage() {
+  const t = useTranslations('auth.signup');
+  const tErrors = useTranslations('errors');
+  const router = useRouter();
+  const params = useParams<{ locale: string }>();
+  const locale = params?.locale ?? 'en';
+
+  const [loading, setLoading] = useState(false);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
+
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    setErrorKey(null);
+
+    const form = new FormData(e.currentTarget);
+    const payload = {
+      name: String(form.get('name') ?? ''),
+      email: String(form.get('email') ?? ''),
+      password: String(form.get('password') ?? ''),
+    };
+
+    const res = await fetch('/api/auth/sign-up', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      setErrorKey(data.error === 'email_taken' ? 'email_taken' : 'signup_failed');
+      setLoading(false);
+      return;
+    }
+
+    router.push(`/${locale}/sign-in?registered=1`);
+  }
 
   return (
     <div className="container flex min-h-screen items-center justify-center">
@@ -21,10 +54,10 @@ export default async function SignUpPage({
           <p className="mt-2 text-sm text-muted-foreground">{t('subtitle')}</p>
         </div>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={onSubmit}>
           <div className="space-y-2">
             <Label htmlFor="name">{t('name')}</Label>
-            <Input id="name" name="name" type="text" required autoComplete="name" />
+            <Input id="name" name="name" type="text" autoComplete="name" required />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">{t('email')}</Label>
@@ -41,8 +74,13 @@ export default async function SignUpPage({
               autoComplete="new-password"
             />
           </div>
-          <Button type="submit" className="w-full">
-            {t('submit')}
+          {errorKey ? (
+            <p className="text-sm text-destructive">
+              {errorKey === 'email_taken' ? tErrors('email_taken') : tErrors('signup_failed')}
+            </p>
+          ) : null}
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? t('submitting') : t('submit')}
           </Button>
         </form>
 

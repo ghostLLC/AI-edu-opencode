@@ -11,6 +11,6 @@ export default defineConfig({
   verbose: true,
   strict: true,
   schemaFilter: ['public'],
-  // pgvector 需要 custom types
-  extensionsFilters: ['vector'],
+  // pgvector 是 customType, 不通过 extensionsFilters 处理
+  // HNSW 索引需要在生成的迁移 SQL 里手动追加(见 lib/db/schema/kb.ts 注释)
 });

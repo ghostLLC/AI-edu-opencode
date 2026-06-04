@@ -22,8 +22,10 @@
       "email": "Email",
       "password": "Password",
       "submit": "Sign in",
+      "submitting": "Signing in...",
       "no_account": "Don't have an account?",
-      "sign_up_link": "Sign up"
+      "sign_up_link": "Sign up",
+      "error": "Invalid email or password"
     },
     "signup": {
       "title": "Create your account",
@@ -32,6 +34,7 @@
       "email": "Email",
       "password": "Password",
       "submit": "Create account",
+      "submitting": "Creating account...",
       "have_account": "Already have an account?",
       "sign_in_link": "Sign in"
     }
@@ -48,7 +51,19 @@
   "plans": {
     "title": "My Learning Plans",
     "new_cta": "New plan",
-    "skeleton_placeholder": "Your plans will appear here. Create your first one to get started."
+    "skeleton_placeholder": "Plans will appear here once the AI orchestrator is wired in Week 2.",
+    "detail": {
+      "stage_learn": "Learn",
+      "stage_practice": "Practice",
+      "stage_assess": "Assess",
+      "learn_desc": "Socratic method",
+      "practice_desc": "Consolidate what you learned",
+      "assess_desc": "Real task",
+      "start_learning": "Start learning",
+      "complete_to_unlock": "Complete previous stage to unlock",
+      "node_list": "Node list",
+      "nodes_count": "{count} nodes"
+    }
   },
   "intake": {
     "title": "What do you want to learn?",
@@ -72,5 +87,9 @@
   },
   "languageSwitcher": {
     "label": "Language"
+  },
+  "errors": {
+    "email_taken": "This email is already registered.",
+    "signup_failed": "Sign-up failed. Please try again."
   }
 }

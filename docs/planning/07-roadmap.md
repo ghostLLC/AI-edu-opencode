@@ -2,7 +2,7 @@
 
 > 本章定义 v1(6 周 MVP)→ v2(3-6 月)→ v3(12 月+) 的开发路线、每周 milestone、人力分配。
 > 配套:Ch 00 范围 / Ch 01 功能切片
-> 版本:v0.1 | 状态:草稿
+> 版本:v0.2 | 状态:进行中(Week 1 + Week 2 已完成)
 
 ---
 
@@ -47,18 +47,30 @@
 
 **Demo 节点**:能注册登录,看到空 dashboard,UI 双语切换正常。
 
-### Week 2:AI 编排基础
+### Week 2:AI 编排基础 ✅ 已完成 (2026-06-04)
 
-| Day | 任务 | 产出 |
-|---|---|---|
-| 1-2 | Vercel AI SDK + DeepSeek 接入 | 能流式对话(简单 prompt) |
-| 2-3 | Prompt Registry + 模板加载机制 | 模板版本化 |
-| 3-4 | Orchestrator 骨架 + Context Builder | runStage() 接口可调 |
-| 4-5 | Tool Registry 框架(空实现) | 工具可注册可调 |
-| 5-6 | Langfuse 集成 + trace 验证 | 每次调用有 trace |
-| 6 | Sentry + PostHog 接入 | 错误可见,事件可见 |
+| Day | 任务 | 产出 | 状态 |
+|---|---|---|---|
+| 1-2 | Vercel AI SDK + DeepSeek 接入 | `lib/ai/providers.ts` (customProvider w/ languageModels + textEmbeddingModels) | ✅ |
+| 2-3 | Prompt Registry + 模板加载机制 | `lib/ai/prompts/{intake,learn,practice,assess}.ts`(4 个 stage 系统提示 + 用户提示构造器) | ✅ |
+| 3-4 | Orchestrator 骨架 + Context Builder | `lib/ai/orchestrator.ts` (runStage 调度 4 阶段) + `lib/ai/context.ts` (loadContext 加载 user/plan/node/history) | ✅ |
+| 4-5 | KB 检索服务 + 阈值过滤 | `lib/ai/kb/embedder.ts` (bge-m3 1024-dim) + `lib/ai/kb/retriever.ts` (pgvector cosine via Drizzle sql) | ✅ |
+| 5-6 | Stage Handlers + 持久化 | `lib/ai/stages/{intake,learn,practice,assess}.ts` + `message-store.ts` (chat_messages 写入 + assessmentScores 插入) | ✅ |
+| 6 | Cost Guardrail + Langfuse | `lib/ai/rate-limiter.ts` (日预算 ¥1/user + 持久化 totalAiCalls/totalTokensUsed) + Langfuse trace 在 onFinish 调用 | ✅ |
 
-**Demo 节点**:在 chat 页能跟 AI 流式对话(简单 demo,无业务逻辑),AI 调用在 Langfuse 可见。
+**Demo 节点**:`POST /api/chat {stage:'intake'}` → 调 DeepSeek-V4 Pro (generateObject w/ Zod schema) → 自动持久化 learning_plans + plan_nodes + 返回 JSON {planId, plan};`{stage:'learn'|'practice'}` → Flash 流式对话 (streamText) + chat_messages 持久化;`{stage:'assess'}` → Pro 结构化评分 + assessment_scores 行 + 评估总分行更新;Langfuse 每次调用有 trace。
+
+**模型分工(Week 2 实际实现)**:
+- `deepseek-v4-pro` (Pro):intake (方案生成) + assess (评分)。对正确性要求高。
+- `deepseek-v4-flash` (Flash):learn (苏格拉底) + practice (任务生成)。对延迟要求高。
+
+**预算护栏**:每用户每日 ¥1 in-memory 计数,超限返回 HTTP 429;`user_stats.total_ai_calls` / `total_tokens_used` 实时累加。
+
+**未做(明确推迟)**:
+- Tool Registry(Week 2 没用工具调用,直接在 stage handler 里做 RAG + 持久化)
+- Sentry / PostHog 接入(Week 2 暂时跳过,等 Week 3 客户端 UI 一起接)
+
+**下一里程碑**:Week 3 — Intake UI(多行需求输入 → 调用 orchestrator → 方案确认页)。
 
 ### Week 3:Intake + 方案生成(模式 1 主流程)
 

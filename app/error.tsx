@@ -3,6 +3,9 @@
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 
+// Global error boundary.
+// Note: this is rendered OUTSIDE the [locale] layout, so it cannot use next-intl.
+// We hardcode English here. Week 2 will add locale detection via cookies.
 export default function GlobalError({
   error,
   reset,
@@ -11,17 +14,17 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // 上报到 Sentry(配置好之后)
+    // TODO: wire to Sentry once SENTRY_DSN is configured
     console.error(error);
   }, [error]);
 
   return (
-    <html>
+    <html lang="en">
       <body>
         <div className="container flex min-h-screen flex-col items-center justify-center gap-4">
-          <h2 className="text-2xl font-bold">页面出错了</h2>
-          <p className="text-muted-foreground">我们已经记录这个问题。</p>
-          <Button onClick={() => reset()}>重试</Button>
+          <h2 className="text-2xl font-bold">Something went wrong</h2>
+          <p className="text-muted-foreground">We&apos;ve recorded this issue. Please try again.</p>
+          <Button onClick={() => reset()}>Try again</Button>
         </div>
       </body>
     </html>

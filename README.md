@@ -2,8 +2,8 @@
 
 > **AI 时代的学习平台** — 在知识随时可被 AI 调用的时代,把"记住什么"重新定义为"能做什么"。
 
-[![Status](https://img.shields.io/badge/status-v0.1%20skeleton-yellow)]()
-[![Stage](https://img.shields.io/badge/stage-week%201%20foundation-orange)]()
+[![Status](https://img.shields.io/badge/status-v0.2%20week2-blue)]()
+[![Stage](https://img.shields.io/badge/stage-week%202%20orchestrator-blueviolet)]()
 [![License](https://img.shields.io/badge/license-TBD-lightgrey)]()
 
 ## 项目简介
@@ -16,25 +16,38 @@
 
 ## 当前状态
 
-**v0.1 — 骨架阶段(Week 1 Foundation)**
+**v0.2 — Week 2 AI 编排(已完成)**
 
 | 阶段 | 状态 | 备注 |
 |---|---|---|
 | 规划文档 | ✅ 完成 | `docs/planning/planning.md`(8 章合并,138 KB) |
-| 骨架文件 | ✅ 完成 | Next.js 15 + Drizzle + Auth.js v5 + i18n |
-| pnpm install | 📋 待验证 | 见下方"本地启动" |
-| v1 MVP | 📋 计划中 | 6 周后 |
+| 骨架(Week 1) | ✅ 完成 | Next.js 15 + Drizzle + Auth.js v5 + i18n + bcrypt 完整 |
+| AI 编排(Week 2) | ✅ 完成 | 4 stage (intake/learn/practice/assess) + RAG + 成本护栏 |
+| 本地验证 | ✅ 通过 | `pnpm typecheck` 0 error / `pnpm test` 10/10 / `pnpm dev` Ready 3.3s |
+| v1 MVP | 📋 计划中 | Week 3-6 |
 
-### 骨架包含
+### Week 2 实际产出
+
+- **Prompt 层**:`lib/ai/prompts/{intake,learn,practice,assess}.ts` — 4 个 stage 的系统提示 + 用户提示构造器(支持 KB hits、history、rubric 注入)
+- **RAG 层**:`lib/ai/kb/embedder.ts` (bge-m3 1024-dim) + `lib/ai/kb/retriever.ts` (pgvector cosine via Drizzle raw SQL,HNSW 索引已加)
+- **Context**:`lib/ai/context.ts` — 加载 user profile + plan + current node + 最近 20 条 chat history
+- **Stage Handlers**:`lib/ai/stages/{intake,learn,practice,assess}.ts`:
+  - `intake`:`generateObject` (Pro) + Zod schema + `persistPlan()` 写 learning_plans + plan_nodes
+  - `learn` / `practice`:`streamText` (Flash) 流式对话 + `onFinish` 持久化 chat_messages
+  - `assess`:`generateObject` (Pro) + Zod score schema + 写 assessment_scores + 更新 assessment 行
+- **Orchestrator**:`lib/ai/orchestrator.ts` — `runStage(input)` 调度 4 个 stage,统一 `toDataStreamResponse()` 契约
+- **Cost Guardrail**:`lib/ai/rate-limiter.ts` — 日预算 ¥1/user (in-memory) + 持久化 totalAiCalls/totalTokensUsed
+- **共享**:`lib/ai/stages/message-store.ts` — 复用 user/assistant 消息写入
+
+### 骨架包含(Week 1)
 
 - **配置层**:package.json / tsconfig / biome / drizzle / tailwind / vitest / playwright
-- **数据层**:11 张 Drizzle schema(users / auth / plans / nodes / progress / messages / assessments / kb / stats / v2-reserved)
-- **路由层**:i18n 中间件 + App Router 页面(locale 感知)+ 鉴权保护
-- **AI 层**:orchestrator stub + 模型选型 + cost calculator + rate limiter
+- **数据层**:11 张 Drizzle schema(users / auth / plans / nodes / progress / messages / assessments / kb / stats / v2-reserved)+ HNSW 索引 + users.passwordHash
+- **路由层**:i18n 中间件 + App Router 页面(locale 感知)+ 鉴权保护 + sign-up API
 - **UI 层**:shadcn-ui 基础组件(Button/Input/Label/Card/Textarea)+ 共享组件(nav-sidebar / user-menu / language-switcher)
-- **i18n**:en/zh 翻译文件,所有页面已接入
-- **观测层**:Langfuse / Sentry / PostHog 接入桩
-- **测试**:Vitest 单测示例 + Playwright E2E 烟雾测试
+- **i18n**:en/zh 翻译文件,所有页面已接入(包含 auth + plans + errors keys)
+- **观测层**:Langfuse trace 集成(每次 AI 调用);Sentry / PostHog 桩(Week 3+ 接入)
+- **测试**:Vitest 单测(2 文件, 10 通过)+ Playwright E2E 烟雾测试
 - **脚本**:Drizzle migrate + KB 种子脚本
 
 ## 本地启动
@@ -92,10 +105,12 @@ pnpm dev
 
 ### 注意
 
-- **Embedding**:KB 的 HNSW 索引需在迁移 SQL 中手动加(见 `lib/db/schema/kb.ts` 注释)
-- **Vercel 部署**:准备用 Neon 时,把 `lib/db/client.ts` 改用 `@neondatabase/serverless` 适配
-- **Auth.js password 存储**:当前 authorize() 是 stub,Week 2 接 bcryptjs 完整流程
-- **AI 编排**:runStage() 当前是 echo stub,Week 2 接入完整 RAG + history
+- **Embedding**:KB 的 HNSW 索引已在 `0000_bright_spacker_dave.sql` 末尾手加(Neon 需启用 pgvector 扩展)
+- **Vercel 部署**:准备用 Neon 时,把 `lib/db/client.ts` 改用 `@neondatabase/serverless` 适配(postgres-js 配 `prepare: false` 已支持)
+- **Auth.js password 存储**:`authorize()` 用 bcryptjs 完整 compare 流程已实现,sign-up API 在 `app/api/auth/sign-up/route.ts`
+- **AI 编排**:`runStage()` 4 stage 全部实现(intake/learn/practice/assess),通过 `POST /api/chat` 调用
+- **预算**:每用户每日 ¥1(可调),超限返回 429;实际生产建议把 in-memory map 换 Redis/Upstash
+- **客户端消费**:learn/practice 用 `useChat` (text stream);intake/assess 用 `useObject` 或直接 `fetch().json()` 读结构化响应
 
 ## 文档导航
 
@@ -177,5 +192,5 @@ TBD(将在 v1 上线前确定)
 
 ---
 
-> **状态快照**:规划完成度 100% | 骨架代码 100% | 用户 0
-> **下一里程碑**:Week 1 末 — `pnpm dev` 跑通,注册登录流程联通
+> **状态快照**:规划完成度 100% | 骨架代码 100% | Week 2 AI 编排 100% | 用户 0
+> **下一里程碑**:Week 3 — Intake UI(多行需求输入 → orchestrator 调 intake stage → 方案确认页)

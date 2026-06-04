@@ -1,3 +1,4 @@
 // Auth.js v5 catch-all route
-// 实际 handler 在 lib/auth/config.ts 导出
-export { GET, POST } from '@/lib/auth/config';
+// handlers 包含 GET 和 POST, 在 lib/auth/config.ts 导出
+import { handlers } from '@/lib/auth/config';
+export const { GET, POST } = handlers;

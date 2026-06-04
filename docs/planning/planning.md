@@ -1,9 +1,15 @@
 ﻿# AI Learning Platform — 完整规划文档
 
-> **版本**: v0.1 草稿(8 章合并版)
+> **版本**: v0.2(Week 1 + Week 2 已实施)
 > **生成时间**: 2026-06-04
 > **用途**: 1 人项目完整规划,周度 review
-> **状态**: 待用户确认后进入骨架文件阶段
+> **状态**: 骨架 100% + AI 编排 100% 已落地,Week 3 待开始
+>
+> **v0.2 实际进展(2026-06-04)**:
+> - ✅ Week 1 骨架(Next.js 15 + Drizzle + Auth.js v5 + bcrypt + i18n + shadcn-ui)
+> - ✅ Week 2 AI 编排(4 stage + RAG + cost guardrail + Langfuse trace)
+> - 📍 下一里程碑:Week 3 Intake UI(多行需求输入 → orchestrator intake stage → 方案确认页)
+> - 详细 day-by-day 见 `07-roadmap.md` 的 Week 2 章节(已用实际产出更新)
 
 ## 目录
 

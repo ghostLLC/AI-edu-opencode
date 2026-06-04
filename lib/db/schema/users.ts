@@ -20,6 +20,9 @@ export const users = pgTable('users', {
   tenantId: uuid('tenant_id'),
   capabilitySnapshot: jsonb('capability_snapshot'),
 
+  // 凭证(Credentials provider 用)
+  passwordHash: text('password_hash'),
+
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   deletedAt: timestamp('deleted_at', { withTimezone: true }),

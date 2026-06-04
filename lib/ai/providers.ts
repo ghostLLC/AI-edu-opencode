@@ -19,7 +19,7 @@ export const modelProvider = customProvider({
     'deepseek-v4-pro': deepseek('deepseek-v4-pro'),
     'claude-sonnet': anthropic('claude-sonnet-4-5'),
   },
-  embeddingModels: {
+  textEmbeddingModels: {
     'deepseek-embedding': deepseek.textEmbeddingModel('bge-m3'),
   },
   fallbackProvider: anthropic,

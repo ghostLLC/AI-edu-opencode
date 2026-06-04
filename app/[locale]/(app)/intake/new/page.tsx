@@ -40,7 +40,7 @@ export default async function IntakeNewPage({
           />
         </div>
         <Button type="submit" className="w-full" disabled>
-          {t('submit')} (TODO: 接入 AI)
+          {t('submit')}
         </Button>
       </form>
     </div>

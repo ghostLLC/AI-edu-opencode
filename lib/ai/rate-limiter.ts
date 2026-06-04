@@ -1,29 +1,51 @@
+/**
+ * Per-user daily budget guard + spend recorder.
+ *
+ * - In-memory map tracks the current day's spend per user (resets at UTC midnight).
+ * - On every AI call, the stage handler calls recordSpend() which:
+ *   1. Increments the in-memory counter
+ *   2. Fire-and-forget persists totalAiCalls + totalTokensUsed + lastActiveAt to user_stats
+ *
+ * Multi-instance deployments should swap the in-memory map for Redis/Upstash.
+ */
+
+import { eq, sql } from 'drizzle-orm';
+import type { LanguageModelUsage } from 'ai';
 import { db } from '@/lib/db/client';
 import { userStats } from '@/lib/db/schema';
-import { eq, sql } from 'drizzle-orm';
 
-// 每用户日预算(¥)
 const DAILY_BUDGET_YUAN = 1.0;
 
-// 用内存做日预算追踪(单进程)
-// 多实例部署时改用 Redis/Upstash
-const dailySpend = new Map<string, { date: string; spent: number }>();
+interface DailyRecord {
+  date: string;
+  spent: number;
+}
+
+const dailySpend = new Map<string, DailyRecord>();
+
+function todayKey(): string {
+  return new Date().toISOString().slice(0, 10);
+}
 
 export async function checkBudget(userId: string): Promise<void> {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayKey();
   const record = dailySpend.get(userId);
 
   if (!record || record.date !== today) {
     dailySpend.set(userId, { date: today, spent: 0 });
   } else if (record.spent >= DAILY_BUDGET_YUAN) {
     throw new BudgetExceededError(
-      `今日 AI 调用预算已达上限(¥${DAILY_BUDGET_YUAN}),请明天再来`,
+      `Daily AI budget exceeded (¥${DAILY_BUDGET_YUAN}). Resets at 00:00 UTC.`,
     );
   }
 }
 
-export function recordSpend(userId: string, cost: number): void {
-  const today = new Date().toISOString().slice(0, 10);
+export function recordSpend(
+  userId: string,
+  cost: number,
+  usage: LanguageModelUsage,
+): void {
+  const today = todayKey();
   const record = dailySpend.get(userId);
   if (!record || record.date !== today) {
     dailySpend.set(userId, { date: today, spent: cost });
@@ -31,14 +53,30 @@ export function recordSpend(userId: string, cost: number): void {
     record.spent += cost;
   }
 
-  // 同步到 userStats(异步,不阻塞)
+  // Persist to user_stats (fire-and-forget, do not block AI latency).
+  const totalTokens = (usage.promptTokens ?? 0) + (usage.completionTokens ?? 0);
   void db
     .update(userStats)
     .set({
       totalAiCalls: sql`${userStats.totalAiCalls} + 1`,
+      totalTokensUsed: sql`${userStats.totalTokensUsed} + ${totalTokens}`,
+      lastActiveAt: new Date(),
       updatedAt: new Date(),
     })
-    .where(eq(userStats.userId, userId));
+    .where(eq(userStats.userId, userId))
+    .catch((err: unknown) => {
+      console.warn('[rate-limiter] failed to persist user_stats:', err);
+    });
+}
+
+export function getDailySpend(userId: string): number {
+  const today = todayKey();
+  const record = dailySpend.get(userId);
+  return record?.date === today ? record.spent : 0;
+}
+
+export function getDailyBudget(): number {
+  return DAILY_BUDGET_YUAN;
 }
 
 export class BudgetExceededError extends Error {

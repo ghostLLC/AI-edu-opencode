@@ -1,13 +1,16 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
+// Global 404 page.
+// Rendered outside [locale] layout, so we hardcode English.
+// Week 2 will add locale detection via cookies.
 export default function NotFound() {
   return (
     <div className="container flex min-h-screen flex-col items-center justify-center gap-4">
       <h2 className="text-4xl font-bold">404</h2>
-      <p className="text-muted-foreground">页面不存在</p>
+      <p className="text-muted-foreground">Page not found</p>
       <Button asChild>
-        <Link href="/">回首页</Link>
+        <Link href="/">Go home</Link>
       </Button>
     </div>
   );

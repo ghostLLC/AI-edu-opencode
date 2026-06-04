@@ -49,19 +49,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           .where(eq(users.email, email))
           .limit(1);
 
-        if (!user) return null;
+        if (!user || !user.passwordHash) return null;
 
-        // TODO: 实现 password hash 存储
-        // 当前是骨架,先返回 user 让流程跑通
+        const ok = await bcrypt.compare(password, user.passwordHash);
+        if (!ok) return null;
+
         return {
           id: user.id,
           email: user.email,
           name: user.name,
           image: user.image,
         };
-
-        void bcrypt;
-        void password;
       },
     }),
   ],
