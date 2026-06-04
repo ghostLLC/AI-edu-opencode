@@ -38,6 +38,7 @@ pnpm-debug.log*
 .env.local
 .env.development.local
 .env.test.local
+.env.production
 .env.production.local
 
 # Keep example env
@@ -87,3 +88,5 @@ postgres-data/
 # User-specific
 *.user
 *.local
+
+.vercel

@@ -25,7 +25,7 @@ function parseEnv(path: string): Record<string, string> {
   if (!existsSync(path)) {
     console.error(`❌ ${path} not found.\n`);
     console.error(`   1. Copy .env.example to ${path}`);
-    console.error(`   2. Fill in real values (Neon, DeepSeek, Langfuse, Sentry, PostHog)`);
+    console.error(`   2. Fill in real values (DATABASE_URL, DeepSeek, Langfuse, PostHog)`);
     console.error(`   3. Run: pnpm deploy`);
     process.exit(1);
   }
@@ -80,11 +80,14 @@ async function main(): Promise<void> {
     'AUTH_URL',
     'AUTH_TRUST_HOST',
     'DEEPSEEK_API_KEY',
+    'LANGFUSE_HOST',
     'LANGFUSE_PUBLIC_KEY',
     'LANGFUSE_SECRET_KEY',
     'NEXT_PUBLIC_POSTHOG_KEY',
+    'NEXT_PUBLIC_POSTHOG_HOST',
     'NEXT_PUBLIC_APP_URL',
   ];
+  // DEEPSEEK_BASE_URL has a default in code (lib/ai/providers.ts) — optional.
   const missing = REQUIRED.filter((k) => !env[k]);
   if (missing.length > 0) {
     console.error(`\n❌ Missing required env vars:`);
