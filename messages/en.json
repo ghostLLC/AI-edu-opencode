@@ -4,16 +4,35 @@
     "welcome": "Welcome, {name}"
   },
   "home": {
+    "eyebrow": "AI-powered learning, in 3 stages",
     "title": "Learn anything with AI tutoring",
     "subtitle": "Get a personalized 3-stage learning path, adaptive practice, and real-time feedback — all powered by AI.",
     "cta_primary": "Get started",
     "cta_secondary": "Sign in",
+    "trust_note": "Free to start · No credit card required",
+    "features_title": "Why AI-Edu-OpenCode",
+    "features_subtitle": "Built around a tight 3-stage loop that turns knowledge into capability.",
     "feature_1_title": "Personalized",
     "feature_1_desc": "Tell us your goal. We generate a learning path tuned to your current level.",
     "feature_2_title": "Adaptive",
     "feature_2_desc": "Difficulty adjusts to your mastery in real time. No busywork, no frustration.",
     "feature_3_title": "Community",
-    "feature_3_desc": "Learn from peers, share knowledge in the community knowledge base."
+    "feature_3_desc": "Learn from peers, share knowledge in the community knowledge base.",
+    "how_title": "How it works",
+    "how_subtitle": "Three stages, one loop. Move from concept to capability in days, not months.",
+    "step_1_title": "Tell us your goal",
+    "step_1_desc": "Type what you want to learn in plain language. We turn it into a structured plan.",
+    "step_2_title": "Learn and practice",
+    "step_2_desc": "Socratic conversations and adaptive tasks build real understanding.",
+    "step_3_title": "Prove it on a real task",
+    "step_3_desc": "Submit work, get AI-scored against a rubric, iterate until you pass.",
+    "cta_title": "Ready to learn something new?",
+    "cta_subtitle": "Start a plan in under a minute. No setup, no commitment.",
+    "check_free": "Free to start",
+    "check_no_cc": "No credit card",
+    "check_cancel": "Cancel anytime",
+    "footer_brand": "© 2026 AI-Edu-OpenCode",
+    "footer_tagline": "Learn with AI, prove with work."
   },
   "auth": {
     "signin": {
@@ -150,6 +169,13 @@
     "signup_failed": "Sign-up failed. Please try again.",
     "unauthorized": "Please sign in to continue.",
     "no_plan_id": "Server didn't return a plan ID. Please try again.",
-    "generate_failed": "Plan generation failed (status {status})."
+    "generate_failed": "Plan generation failed (status {status}).",
+    "fatal_title": "Something went wrong",
+    "fatal_desc": "We hit an unexpected error. Please try again, and reach out if it keeps happening.",
+    "fatal_digest": "Reference: {digest}",
+    "try_again": "Try again",
+    "go_home": "Go home",
+    "not_found_title": "Page not found",
+    "not_found_desc": "The page you're looking for doesn't exist or has been moved."
   }
 }

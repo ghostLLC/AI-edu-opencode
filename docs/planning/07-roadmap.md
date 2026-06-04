@@ -111,7 +111,29 @@
 
 **Demo 节点**:进入 Assess,看到任务卡,提交产物,看到 AI 评分,能复议。
 
-### Week 6:打磨 + 上线
+### Week 6:打磨 + 上线 (Day 1 + Day 3 + Day 4 已落地, 2026-06-04)
+
+| Day | 任务 | 实际产出 | 状态 |
+|---|---|---|---|
+| 1 | Seed KB 初始 10 条 | `scripts/seed-kb.ts` 扩到 10 条 (覆盖 frontend × 2, language × 2, cloud × 1, data × 2, math × 1, other × 2), 每条带完整 samplePlan (3-8 节点), seed 流程调 `embedText()` 写 bge-m3 1024-dim embedding, 失败优雅降级到 NULL | ✅ |
+| 2 | E2E 关键路径 (Playwright) | 推迟到 v1.1 (需要真实 DB + API key) | ⏳ |
+| 3 | Landing page + 营销文案 | `app/[locale]/page.tsx` 重写: Eyebrow + Hero + Features (3 cards w/ Lucide icons) + How-it-works (3 steps) + Final CTA + Footer; i18n 在 `home` section 加 15+ keys (eyebrow/trust_note/features_*/how_*/step_*/cta_*/check_*/footer_*) | ✅ |
+| 4 | 错误处理 + 性能 + Lighthouse | 拆出 `app/[locale]/error.tsx` + `app/[locale]/not-found.tsx` (locale-scoped + i18n), 加 `components/ui/toaster.tsx` (sonner wrapper) 挂到 layout, `errors.*` 加 6 keys (fatal_*/try_again/go_home/not_found_*); `app/error.tsx` + `app/not-found.tsx` 保留作 root fallback; Lighthouse 待真部署后再跑 | ✅ (partial) |
+| 5 | 部署 Vercel + 配置环境变量 + 域名 | 待办 (用户手动) | ⏳ |
+| 6 | 监控告警 + 文档 + 邀请 10 个种子用户 | 待办 (用户手动) | ⏳ |
+
+**Demo 节点 (Week 6)**: Landing 页可访问; KB 预设 10 条; 错误页/404 i18n 完整; Toaster 可发通知 → 1 人可演示完整 UX (除 E2E 自动测试和真实部署)。
+
+**Week 6 已知未做**:
+- E2E Playwright 套件 (无真 DB)
+- Sentry 实际接入 (deps 装了, DSN 未配)
+- PostHog 分析 (deps 装了, key 未配)
+- Lighthouse 跑分 (无真生产部署)
+- 性能: landing 页 SSR 已 OK, 大型 plan 详情页未做 select 优化
+
+**下一里程碑**:v1.1 候选 — 真实 DeepSeek 接入测试 / E2E 套件 / Sentry+PostHog 真接 / Lighthouse 90+ 优化。
+
+---
 
 | Day | 任务 | 产出 |
 |---|---|---|

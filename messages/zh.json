@@ -4,16 +4,35 @@
     "welcome": "欢迎回来, {name}"
   },
   "home": {
-    "title": "AI 辅导, 学你想学的",
-    "subtitle": "3 阶段个性化学习路径, 智能练习, 实时反馈 —— 全部由 AI 驱动。",
-    "cta_primary": "开始学习",
+    "eyebrow": "AI 驱动 · 三阶段学习闭环",
+    "title": "和 AI 一起, 想学什么学什么",
+    "subtitle": "3 阶段闭环: 个性化方案 + 苏格拉底式对话 + 真实任务考核。",
+    "cta_primary": "免费开始",
     "cta_secondary": "登录",
+    "trust_note": "免费起步 · 无需信用卡",
+    "features_title": "为什么是 AI-Edu-OpenCode",
+    "features_subtitle": "围绕一个紧凑的三阶段循环, 把知识变成能力。",
     "feature_1_title": "个性化",
-    "feature_1_desc": "告诉我们你的目标, 获得量身定制的学习路径。",
+    "feature_1_desc": "告诉我们你的目标, AI 量身定制学习路径。",
     "feature_2_title": "自适应",
-    "feature_2_desc": "难度根据你的掌握度实时调整。",
+    "feature_2_desc": "难度随掌握度实时调整, 不灌水不卡壳。",
     "feature_3_title": "社区",
-    "feature_3_desc": "与同伴学习, 在知识库中分享。"
+    "feature_3_desc": "同伴学习 + 社区知识库, 共建共享。",
+    "how_title": "怎么用",
+    "how_subtitle": "三阶段, 一个循环。几天就能把概念变成能力, 不是几个月。",
+    "step_1_title": "告诉我们你的目标",
+    "step_1_desc": "用日常的话写下想学什么, 我们把它拆成结构化方案。",
+    "step_2_title": "边学边练",
+    "step_2_desc": "苏格拉底式对话 + 自适应练习, 真正理解而不是死记。",
+    "step_3_title": "在真实任务上证明",
+    "step_3_desc": "提交作品, AI 按 rubric 评分, 迭代直到过关。",
+    "cta_title": "准备学点新东西?",
+    "cta_subtitle": "一分钟内开启方案, 无需配置, 无需承诺。",
+    "check_free": "免费起步",
+    "check_no_cc": "无需信用卡",
+    "check_cancel": "随时取消",
+    "footer_brand": "© 2026 AI-Edu-OpenCode",
+    "footer_tagline": "用 AI 学, 用作品证明。"
   },
   "auth": {
     "signin": {
@@ -150,6 +169,13 @@
     "signup_failed": "注册失败, 请重试。",
     "unauthorized": "请登录后继续。",
     "no_plan_id": "服务器未返回方案 ID, 请重试。",
-    "generate_failed": "方案生成失败 (状态码 {status})。"
+    "generate_failed": "方案生成失败 (状态码 {status})。",
+    "fatal_title": "出错了",
+    "fatal_desc": "我们遇到了一个意外错误, 请重试。如果持续出现请联系管理员。",
+    "fatal_digest": "参考 ID: {digest}",
+    "try_again": "重试",
+    "go_home": "回首页",
+    "not_found_title": "页面不存在",
+    "not_found_desc": "你要找的页面不存在或已被移动。"
   }
 }
