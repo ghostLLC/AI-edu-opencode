@@ -25,7 +25,7 @@ function parseEnv(path: string): Record<string, string> {
   if (!existsSync(path)) {
     console.error(`❌ ${path} not found.\n`);
     console.error(`   1. Copy .env.example to ${path}`);
-    console.error(`   2. Fill in real values (DATABASE_URL, DeepSeek, Langfuse, PostHog)`);
+    console.error(`   2. Fill in real values (DATABASE_URL, DeepSeek, Langfuse, PostHog). POSTGRES_URL is auto-injected by Vercel Postgres.`);
     console.error(`   3. Run: pnpm deploy`);
     process.exit(1);
   }
@@ -87,6 +87,7 @@ async function main(): Promise<void> {
     'NEXT_PUBLIC_POSTHOG_HOST',
     'NEXT_PUBLIC_APP_URL',
   ];
+  // POSTGRES_URL is auto-injected by Vercel Postgres (no need to set in .env.production).
   // DEEPSEEK_BASE_URL has a default in code (lib/ai/providers.ts) — optional.
   const missing = REQUIRED.filter((k) => !env[k]);
   if (missing.length > 0) {

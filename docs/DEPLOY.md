@@ -12,14 +12,13 @@
 | What | Where | Cost (v1) |
 |---|---|---|
 | App hosting | [Vercel](https://vercel.com) | Free (Hobby) |
-| Database (Postgres + pgvector) | [Neon](https://neon.tech) | Free (512 MB) |
+| Database (Postgres + pgvector) | [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres) (recommended) / [Neon](https://neon.tech) (fallback) | Free (256 MB / 512 MB) |
 | Domain | Cloudflare / Namecheap | ~$10/yr |
 | AI (LLM) | [DeepSeek](https://platform.deepseek.com) | Pay-as-you-go (~$0.50/M tokens) |
 | Embedding (bge-m3) | DeepSeek / 自托管 | ~$0.10/M tokens |
 | Observability (traces) | [Langfuse Cloud](https://cloud.langfuse.com) | Free (50K traces/mo) |
-| Error tracking | [Sentry](https://sentry.io) | Free (5K events/mo) |
 | Product analytics | [PostHog Cloud](https://posthog.com) | Free (1M events/mo) |
-| Object storage (artifacts) | [Cloudflare R2](https://cloudflare.com) | Free (10 GB) |
+| Object storage (artifacts) | [Cloudflare R2](https://cloudflare.com) | Free (10 GB) — *optional in v1* |
 
 ---
 
@@ -35,7 +34,32 @@ Make sure you have:
 
 ---
 
-## 2. Neon (Postgres + pgvector)
+## 2. Database (Postgres + pgvector)
+
+You have two options for v1. **Vercel Postgres is recommended** — it lives inside your Vercel project, auto-injects `POSTGRES_URL`, and supports pgvector out of the box.
+
+### Option A: Vercel Postgres (recommended, 0 new signups)
+
+1. Go to your Vercel project dashboard → **Storage** tab → **Create Database** → **Postgres**.
+2. Region: **US East (iad1)** (matches Vercel default deployment region).
+3. Database name: `ai-edu-db`.
+4. Vercel will auto-inject these env vars into all environments:
+   - `POSTGRES_URL` (pooled, for runtime)
+   - `POSTGRES_PRISMA_URL` (pooled, for Prisma-style apps)
+   - `POSTGRES_URL_NON_POOLING` (direct, for migrations)
+5. Pull these locally so you can run migrations and seed:
+   ```bash
+   pnpm dlx vercel@latest env pull .env.local --environment production
+   ```
+   This downloads `POSTGRES_URL` (and others) into `.env.local`. The code's fallback chain `DATABASE_URL → POSTGRES_URL → POSTGRES_PRISMA_URL` will pick it up automatically.
+6. Run migrations + seed:
+   ```bash
+   pnpm db:migrate
+   pnpm db:seed
+   ```
+7. Verify: Vercel Dashboard → Storage → your DB → SQL Editor → run `SELECT count(*) FROM kb_entries;` — should return **10**.
+
+### Option B: Neon (if you already have a Neon project)
 
 1. Sign up at [console.neon.tech](https://console.neon.tech).
 2. Create a project: name = `ai-edu-opencode`, region = **AWS US East (Virginia)** (matches Vercel default `iad1`).
@@ -49,7 +73,7 @@ Make sure you have:
    ```
 6. Verify: open [Neon SQL Editor](https://console.neon.tech/app/projects) → run `SELECT count(*) FROM kb_entries;` — should return **10**.
 
-> **Important**: Use the **pooled** connection string on Vercel. The direct connection string is only for migrations.
+> **Important**: For Neon, use the **pooled** connection string in production. The direct connection string is only for migrations.
 
 ---
 
@@ -92,18 +116,9 @@ Save as `AUTH_SECRET`. Also set:
 
 ---
 
-## 6. Sentry (errors)
-
-1. Sign up at [sentry.io](https://sentry.io) → **Create project** → platform = **Next.js**.
-2. Copy the DSN. Save as `SENTRY_DSN` (and optionally `NEXT_PUBLIC_SENTRY_DSN` if you want it auto-injected client-side).
-3. (Optional) Create an auth token under **Settings → Auth Tokens** for source-map upload. Save as `SENTRY_AUTH_TOKEN`.
-4. (Optional) Get the org slug and project slug. Save as `SENTRY_ORG` and `SENTRY_PROJECT`.
-
-> Source-map upload is auto-wired in `next.config.ts` via `withSentryConfig`. If you skip `SENTRY_AUTH_TOKEN`, the build won't fail (the wrapper is silent).
-
 ---
 
-## 7. PostHog (product analytics)
+## 6. PostHog (product analytics)
 
 1. Sign up at [posthog.com](https://posthog.com) → **Cloud EU or US** (free tier covers v1).
 2. Create a project. Copy the **Project API Key** (starts with `phc_`).
@@ -113,7 +128,7 @@ Save as `AUTH_SECRET`. Also set:
 
 ---
 
-## 8. Cloudflare R2 (artifact storage) — *optional in v1*
+## 7. Cloudflare R2 (artifact storage) — *optional in v1*
 
 Only needed when v1.1 ships artifact uploads (currently the assess flow is text-only).
 
@@ -129,7 +144,7 @@ Only needed when v1.1 ships artifact uploads (currently the assess flow is text-
 
 ---
 
-## 9. Vercel (hosting)
+## 8. Vercel (hosting)
 
 1. Go to [vercel.com/new](https://vercel.com/new) → import `ghostLLC/AI-edu-opencode`.
 2. **Configure Project**:
@@ -139,9 +154,11 @@ Only needed when v1.1 ships artifact uploads (currently the assess flow is text-
    - Output directory: `.next` (default)
    - Root directory: `./`
    - Node version: **20.x** (Settings → General → Node.js Version)
-3. **Environment Variables** — paste all of these (mark `Production` + `Preview` + `Development` as needed):
+3. **Environment Variables** — paste all of these (mark `Production` + `Preview` + `Development` as needed). If you're using **Vercel Postgres** (recommended), `POSTGRES_URL` is auto-injected — skip the `DATABASE_URL` line below.
    ```
-   DATABASE_URL=postgresql://...neon...pooler...sslmode=require
+   # If using Vercel Postgres: POSTGRES_URL is auto-injected, do not set.
+   # If using Neon or another external Postgres: paste pooled connection string.
+   # DATABASE_URL=postgresql://...pooled...sslmode=require
    AUTH_SECRET=<openssl rand -base64 32>
    AUTH_URL=https://ai-edu.yourdomain.com
    AUTH_TRUST_HOST=true
@@ -152,11 +169,6 @@ Only needed when v1.1 ships artifact uploads (currently the assess flow is text-
    LANGFUSE_PUBLIC_KEY=pk-lf-...
    LANGFUSE_SECRET_KEY=sk-lf-...
    LANGFUSE_HOST=https://cloud.langfuse.com
-
-   SENTRY_DSN=https://...@sentry.io/...
-   SENTRY_AUTH_TOKEN=sntrys_...        (optional)
-   SENTRY_ORG=your-org                  (optional)
-   SENTRY_PROJECT=ai-edu-opencode       (optional)
 
    NEXT_PUBLIC_POSTHOG_KEY=phc_...
    NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
@@ -175,7 +187,7 @@ Only needed when v1.1 ships artifact uploads (currently the assess flow is text-
 
 ---
 
-## 10. Custom domain
+## 9. Custom domain
 
 1. Buy a domain (e.g. `yourdomain.com`) on Cloudflare or Namecheap.
 2. In Vercel → **Project Settings → Domains** → add `ai-edu.yourdomain.com` (or your preferred subdomain).
@@ -187,7 +199,7 @@ Only needed when v1.1 ships artifact uploads (currently the assess flow is text-
 
 ---
 
-## 11. Post-deploy verification
+## 10. Post-deploy verification
 
 Run through this 10-item checklist before inviting users:
 
@@ -199,23 +211,22 @@ Run through this 10-item checklist before inviting users:
 - [ ] Mark a Learn node complete → return to plan → Practice now unlocked
 - [ ] Submit an Assess → score report renders (check Langfuse trace)
 - [ ] `/en/404` and `/zh/404` show locale-specific 404
-- [ ] PostHog dashboard shows 1+ events for each of the 4 wired events
-- [ ] Sentry has zero new errors in the last hour (besides expected)
+- [ ] PostHog dashboard shows 1+ events for each of the 6 wired events
+- [ ] No 500s in Vercel Runtime Logs for the last 10 minutes
 
 ---
 
-## 12. Cost reality check
+## 11. Cost reality check
 
 | Component | v1 (10 users, 1 month) | v1 (100 users, 1 month) |
 |---|---|---|
-| Vercel | $0 (Hobby) | $20 (Pro, when you hit limits) |
-| Neon | $0 (free 512MB) | $19 (Launch, 10GB) |
+| Vercel (hosting) | $0 (Hobby) | $20 (Pro, when you hit limits) |
+| Vercel Postgres (or Neon) | $0 (256 MB / 512 MB free) | $0 → $20 (Vercel Pro storage) or $19 (Neon Launch) |
 | DeepSeek | ~$1 (¥5) | ~$15 (¥100) |
 | Langfuse | $0 (50K traces free) | $0 → $59 (Pro) |
-| Sentry | $0 (5K events) | $0 → $26 (Team) |
 | PostHog | $0 (1M events) | $0 |
-| R2 | $0 (10GB free) | $0 |
-| **Total** | **~$1/month** | **~$60-100/month** |
+| R2 (v1.1) | $0 (10GB free) | $0 |
+| **Total** | **~$1/month** | **~$40-80/month** |
 
 ---
 
@@ -238,10 +249,6 @@ Vercel Hobby has a 10s function timeout. AI intake can take 8-12s with Pro model
 1. Open browser console — look for `[track] failed:` warnings
 2. Check `NEXT_PUBLIC_POSTHOG_KEY` is set in Vercel env (must be exposed to client)
 3. Check the key starts with `phc_` (project key, not personal API key)
-
-### Sentry source maps not uploading
-
-Set `SENTRY_AUTH_TOKEN` to a token with `project:releases` and `project:source-maps` scopes. Or accept the warning — runtime error capture still works without source maps.
 
 ### Langfuse not receiving traces
 
