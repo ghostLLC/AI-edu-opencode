@@ -2,8 +2,8 @@
 
 > **AI 时代的学习平台** — 在知识随时可被 AI 调用的时代,把"记住什么"重新定义为"能做什么"。
 
-[![Status](https://img.shields.io/badge/status-v0.2%20week2-blue)]()
-[![Stage](https://img.shields.io/badge/stage-week%202%20orchestrator-blueviolet)]()
+[![Status](https://img.shields.io/badge/status-v0.4%20week7-blue)]()
+[![Stage](https://img.shields.io/badge/stage-week%207%20v1.1%20polish-blueviolet)]()
 [![License](https://img.shields.io/badge/license-TBD-lightgrey)]()
 
 ## 项目简介
@@ -192,5 +192,15 @@ TBD(将在 v1 上线前确定)
 
 ---
 
-> **状态快照**:规划完成度 100% | 骨架代码 100% | Week 2 AI 编排 100% | 用户 0
-> **下一里程碑**:Week 3 — Intake UI(多行需求输入 → orchestrator 调 intake stage → 方案确认页)
+## 部署
+
+完整 step-by-step 见 **[`docs/DEPLOY.md`](./docs/DEPLOY.md)** (Neon + DeepSeek + Langfuse + Sentry + PostHog + Vercel + 域名,45-90 分钟可上线)。
+
+简短版:
+1. 配 6 个外部服务 (Neon / DeepSeek / Langfuse / Sentry / PostHog,加 R2 可选)
+2. 推代码到 GitHub,Vercel 导入,粘贴 env vars
+3. 跑 `pnpm db:migrate && pnpm db:seed` 在 Neon 上
+4. 绑域名,搞定
+
+> **状态快照**:规划 100% | Week 1-7 代码 100% | DEPLOY.md ready | 真部署/邀请用户 0
+> **下一里程碑**:用户手动部署 → 端到端验证 → 邀请 10 个种子用户(Day 0-30)

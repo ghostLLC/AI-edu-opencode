@@ -98,11 +98,13 @@ async function runIntakeWithKB(
 ) {
   // Pre-retrieve KB inspiration based on the user's goal.
   // If the embedding API or pgvector is unavailable, we just run without KB hints.
+  // Threshold tuned to 0.7 for v1.1 to favor precision over recall (better plan quality
+  // when matched, but more "no KB" plans). Will revisit after Week 7 KB hit-rate review.
   const kbHits = await retrieveKB({
     query: input.userMessage,
     language: context.user.language,
     topK: 5,
-    minSimilarity: 0.6,
+    minSimilarity: 0.7,
   });
 
   return runIntakeStage({

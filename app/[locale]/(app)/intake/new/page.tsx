@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { track } from '@/lib/observability/track';
 
 export default function IntakeNewPage() {
   const router = useRouter();
@@ -55,6 +56,7 @@ export default function IntakeNewPage() {
         return;
       }
 
+      track('intake_submitted', { planId: data.planId, goal_length: goal.trim().length });
       router.push(`/plans/${data.planId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');

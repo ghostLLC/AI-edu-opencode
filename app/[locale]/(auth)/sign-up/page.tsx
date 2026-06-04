@@ -7,6 +7,7 @@ import { useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { track } from '@/lib/observability/track';
 
 export default function SignUpPage() {
   const t = useTranslations('auth.signup');
@@ -43,6 +44,7 @@ export default function SignUpPage() {
       return;
     }
 
+    track('sign_up_completed', { method: 'email' });
     router.push(`/${locale}/sign-in?registered=1`);
   }
 

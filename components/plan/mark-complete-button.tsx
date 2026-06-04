@@ -8,6 +8,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { track } from '@/lib/observability/track';
 
 export interface MarkCompleteButtonProps {
   planId: string;
@@ -40,6 +41,7 @@ export function MarkCompleteButton(props: MarkCompleteButtonProps) {
         setError(`Failed (${res.status})`);
         return;
       }
+      track('node_marked_complete', { nodeId: props.nodeId, stage: props.stage });
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');

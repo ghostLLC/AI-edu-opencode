@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { track } from '@/lib/observability/track';
 
 export interface AssessFormProps {
   planId: string;
@@ -64,6 +65,7 @@ export function AssessForm(props: AssessFormProps) {
       // The assess stage returns a JSON body. Consume it so the response
       // stream is drained, then refresh the page to render the score report.
       await res.json();
+      track('assess_submitted', { nodeId: props.nodeId, assessmentId: props.assessmentId });
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');

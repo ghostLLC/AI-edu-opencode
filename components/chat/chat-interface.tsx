@@ -12,6 +12,7 @@ import { useChat } from '@ai-sdk/react';
 import { useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { track } from '@/lib/observability/track';
 
 export interface ChatMessage {
   id: string;
@@ -44,7 +45,26 @@ export function ChatInterface(props: ChatInterfaceProps) {
         nodeId: props.nodeId,
       },
       initialMessages: props.initialMessages,
+      onFinish: (message) => {
+        // Track completed assistant turn. The user submit is also tracked
+        // via the form's onSubmit wrapper below.
+        if (message.role === 'assistant') {
+          const event = props.stage === 'learn' ? 'learn_message_sent' : 'practice_message_sent';
+          track(event, { nodeId: props.nodeId });
+        }
+      },
     });
+
+  function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    if (input.trim().length > 0) {
+      track(props.stage === 'learn' ? 'learn_message_sent' : 'practice_message_sent', {
+        nodeId: props.nodeId,
+        // Differentiate user send vs assistant finish in the funnel.
+        phase: 'user_send',
+      });
+    }
+    handleSubmit(e);
+  }
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -95,7 +115,7 @@ export function ChatInterface(props: ChatInterfaceProps) {
         <div ref={bottomRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-3 space-y-2">
+      <form onSubmit={handleFormSubmit} className="mt-3 space-y-2">
         <Textarea
           value={input}
           onChange={handleInputChange}

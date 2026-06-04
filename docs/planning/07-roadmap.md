@@ -111,7 +111,35 @@
 
 **Demo 节点**:进入 Assess,看到任务卡,提交产物,看到 AI 评分,能复议。
 
-### Week 6:打磨 + 上线 (Day 1 + Day 3 + Day 4 已落地, 2026-06-04)
+### Week 7:v1.1 Polish (v0.4 已落地, 2026-06-04)
+
+> Week 6 之后立刻做的小批量,给 Day 2/5/6 (用户操作) 之前先准备好可自动化的部分。
+
+| 任务 | 实际产出 | 状态 |
+|---|---|---|
+| **PostHog mount + 4 事件** | `lib/observability/posthog.tsx` (已存在) 挂到 `app/[locale]/(app)/layout.tsx`;新建 `lib/observability/track.ts` (safe no-op 当 key 未配);`sign_up_completed` / `intake_submitted` / `learn_message_sent` / `practice_message_sent` / `assess_submitted` / `node_marked_complete` 6 个事件接入到 5 个 client component | ✅ |
+| **Sentry 真接** | `sentry.client.config.ts` / `sentry.server.config.ts` / `sentry.edge.config.ts` 3 文件 (DSN 缺失时静默 skip);`next.config.ts` wrap `withSentryConfig` (silent 当 `SENTRY_AUTH_TOKEN` 未配, build 不会 fail) | ✅ |
+| **RAG 阈值 0.6 → 0.7** | `lib/ai/orchestrator.ts` intake stage 调 `retrieveKB` 时 `minSimilarity: 0.7`;`lib/ai/kb/retriever.ts` 加 hit-rate 日志 (`[kb.retriever] queryLen=42 hits=3/5 topSim=0.820 lang=en minSim=0.7`);`sendDefaultPii: false` 默认 | ✅ |
+| **Eval 脚本** | `scripts/eval-prompts.ts` (对应 `pnpm eval`): 5 个 KB 命中测试 (前端/语言/云/数据/写作),纯 dry-run 跑 `embedText` + pgvector cosine,输出 markdown 表格 + summary;`EVAL_MODE=full` 留 hook 但未实现 LLM 评估(成本考虑) | ✅ |
+| **DEPLOY.md** | `docs/DEPLOY.md`: 12 节 step-by-step (Neon → DeepSeek → Auth → Langfuse → Sentry → PostHog → R2 → Vercel → 域名 → 验证 → 成本 → 排错);每服务标 free tier 限额 + v1 100 用户真实成本估算 (~$1/月 / 100 用户 $60-100/月) | ✅ |
+| **vercel.json** | 区域 `iad1` (Neon 匹配)、build/install 命令、security headers (Frame-Options / Content-Type-Options / Referrer-Policy / Permissions-Policy) | ✅ |
+| **Playwright 扩** | 跳过 (现有 4 个 smoke 已够) | — |
+| **loading.tsx skeletons** | 跳过 (1 人用, 不急) | — |
+| **SEO metadata** | 跳过 (v1 上线后再优化) | — |
+| **Plan detail select 优化** | 跳过 (数据量小, < 12 节点/plan) | — |
+| **Tier 2 contribute** | 跳过 (大, 留 v1.1 后半) | — |
+
+**Demo 节点 (Week 7)**:PostHog 4 事件真上报 / Sentry 真捕获错误 / RAG 0.7 阈值可调 / 5 个 eval case 可复跑 / DEPLOY.md 可让 1 人 45 分钟内全部署。
+
+**Week 7 已知未做**:
+- PostHog 事件埋点没盖 `practice_message_sent` 之外的所有 funnel (e.g. `plan_viewed`, `node_marked_complete` 之外的状态)
+- Eval 脚本只 dry-run, 没接真 LLM
+- Tier 2 promote UI/API (kb_tier2_sessions 表已存在, 但没有 UI 入口)
+- `.env.example` 里 `EMBEDDING_API_URL/KEY` 跟 `lib/ai/providers.ts` 实际用的 deepseek 路径有 mismatch, 真部署时按 DEPLOY.md §3 注释处理
+
+**下一里程碑**:v1.1.1 候选 — 真实部署验证 (Neon + Vercel + DeepSeek) / Langfuse 看真实 intake 输出 / eval-prompts 跑真 LLM 模式 / Tier 2 contribute UI。
+
+---
 
 | Day | 任务 | 实际产出 | 状态 |
 |---|---|---|---|

@@ -32,6 +32,7 @@ export async function retrieveKB(opts: RetrieveKBOptions): Promise<RetrievedKB[]
 
   const queryEmbedding = await embedText(query);
   if (!queryEmbedding || queryEmbedding.length === 0) {
+    console.warn('[kb.retriever] no embedding (embedder failed), returning []');
     return [];
   }
 
@@ -69,7 +70,7 @@ export async function retrieveKB(opts: RetrieveKBOptions): Promise<RetrievedKB[]
     similarity: string | number;
   }>;
 
-  return rows
+  const hits = rows
     .map((r) => ({
       id: r.id,
       domain: r.domain,
@@ -80,4 +81,14 @@ export async function retrieveKB(opts: RetrieveKBOptions): Promise<RetrievedKB[]
         typeof r.similarity === 'string' ? Number.parseFloat(r.similarity) : r.similarity,
     }))
     .filter((r) => r.similarity >= minSimilarity);
+
+  // Observability: log KB hit rate. Used for tuning the threshold + seeding strategy.
+  // Format: [kb.retriever] queryLen=42 hits=3/5 topSim=0.82 lang=en domain=frontend
+  const totalBeforeFilter = rows.length;
+  const topSim = hits[0]?.similarity ?? 0;
+  console.log(
+    `[kb.retriever] queryLen=${query.length} hits=${hits.length}/${totalBeforeFilter} topSim=${topSim.toFixed(3)} lang=${language ?? '-'} domain=${domain ?? '-'} minSim=${minSimilarity}`,
+  );
+
+  return hits;
 }

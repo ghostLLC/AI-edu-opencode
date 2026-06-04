@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
+import { withSentryConfig } from '@sentry/nextjs';
 
 const withNextIntl = createNextIntlPlugin('./lib/i18n/request.ts');
 
@@ -31,4 +32,16 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+const sentryWrapped = withSentryConfig(withNextIntl(nextConfig), {
+  // Sentry build-time options. Source-map upload is a no-op when SENTRY_AUTH_TOKEN
+  // is not set, so dev/CI without Sentry won't fail.
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: !process.env.SENTRY_AUTH_TOKEN,
+  widenClientFileUpload: true,
+  hideSourceMaps: true,
+  disableLogger: true,
+});
+
+export default sentryWrapped;
