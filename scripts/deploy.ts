@@ -75,7 +75,6 @@ async function main(): Promise<void> {
   console.log(`   Found ${entries.length} non-empty env vars`);
 
   const REQUIRED = [
-    'DATABASE_URL',
     'AUTH_SECRET',
     'AUTH_URL',
     'AUTH_TRUST_HOST',
@@ -87,7 +86,8 @@ async function main(): Promise<void> {
     'NEXT_PUBLIC_POSTHOG_HOST',
     'NEXT_PUBLIC_APP_URL',
   ];
-  // POSTGRES_URL is auto-injected by Vercel Postgres (no need to set in .env.production).
+  // DATABASE_URL is optional — code falls back to POSTGRES_URL (auto-injected by Vercel Postgres)
+  // or POSTGRES_PRISMA_URL. If using external Postgres (Neon, etc.), set DATABASE_URL.
   // DEEPSEEK_BASE_URL has a default in code (lib/ai/providers.ts) — optional.
   const missing = REQUIRED.filter((k) => !env[k]);
   if (missing.length > 0) {
@@ -95,6 +95,13 @@ async function main(): Promise<void> {
     for (const k of missing) console.error(`   - ${k}`);
     console.error(`\nEdit ${ENV_FILE} and re-run.`);
     process.exit(1);
+  }
+
+  if (!env.DATABASE_URL) {
+    console.log(
+      '\n⚠️  DATABASE_URL not set in .env.production — relying on POSTGRES_URL (auto-injected by Vercel Postgres).',
+    );
+    console.log('   Make sure you created a Postgres database in Vercel Storage tab.');
   }
 
   // Verify Vercel CLI auth
