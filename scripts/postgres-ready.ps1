@@ -14,7 +14,7 @@
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot\..  # project root
 
-Write-Host "1/4 Pulling POSTGRES_URL from Vercel ..." -ForegroundColor Cyan
+Write-Host "1/5 Pulling POSTGRES_URL from Vercel ..." -ForegroundColor Cyan
 pnpm dlx vercel@latest env pull .env.local --environment production 2>&1 | Select-Object -First 5
 if ($LASTEXITCODE -ne 0) { throw "env pull failed" }
 
@@ -22,15 +22,19 @@ if (-not (Select-String -Path .env.local -Pattern '^POSTGRES_URL=')) {
     throw "POSTGRES_URL not in .env.local - did you create Vercel Postgres?"
 }
 
-Write-Host "`n2/4 Running migrations ..." -ForegroundColor Cyan
+Write-Host "`n2/5 Enabling pgvector extension ..." -ForegroundColor Cyan
+pnpm tsx scripts/enable-pgvector.ts 2>&1 | Select-Object -Last 5
+if ($LASTEXITCODE -ne 0) { throw "enable-pgvector failed" }
+
+Write-Host "`n3/5 Running migrations ..." -ForegroundColor Cyan
 pnpm db:migrate 2>&1 | Select-Object -Last 5
 if ($LASTEXITCODE -ne 0) { throw "db:migrate failed" }
 
-Write-Host "`n3/4 Seeding 10 KB entries ..." -ForegroundColor Cyan
+Write-Host "`n4/5 Seeding 10 KB entries ..." -ForegroundColor Cyan
 pnpm db:seed 2>&1 | Select-Object -Last 5
 if ($LASTEXITCODE -ne 0) { throw "db:seed failed" }
 
-Write-Host "`n4/4 Smoke testing DB ..." -ForegroundColor Cyan
+Write-Host "`n5/5 Smoke testing DB ..." -ForegroundColor Cyan
 $checkSql = "SELECT count(*)::int FROM kb_entries;"
 $envContent = Get-Content .env.local | Where-Object { $_ -match '^POSTGRES_URL=' } | Select-Object -First 1
 $dbUrl = ($envContent -split '=', 2)[1].Trim().Trim('"', "'")
